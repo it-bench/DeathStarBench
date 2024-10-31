@@ -5,7 +5,7 @@ ports:
     targetPort: 8081
  
 container:
-  command: ./profile
+  command: /go/bin/geo
   image: deathstarbench/hotel-reservation
   name: hotel-reserv-profile
   ports:
@@ -13,5 +13,5 @@ container:
 
 configMaps:
   - name: service-config.json
-    mountPath: config.json
+    mountPath: /workspace/config.json
     value: service-config

@@ -5,7 +5,7 @@ ports:
     targetPort: 8084
  
 container:
-  command: ./rate
+  command: /go/bin/rate
   image: deathstarbench/hotel-reservation
   name: hotel-reserv-rate
   ports:
@@ -13,5 +13,5 @@ container:
 
 configMaps:
   - name: service-config.json
-    mountPath: config.json
+    mountPath: /workspace/config.json
     value: service-config
