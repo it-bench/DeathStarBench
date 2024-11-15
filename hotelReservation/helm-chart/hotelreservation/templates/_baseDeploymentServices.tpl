@@ -44,6 +44,32 @@ spec:
           {{- end }}
         {{- else if hasKey $.Values.global.services "environments" }}
         env:
+          # Default Kubernetes downward API environment variables
+          - name: POD_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: NODE_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.nodeName
+          - name: HOST_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.hostIP
+          # OpenTelemetry specific environment variables
+          - name: OTEL_SERVICE_NAME
+            value: {{ $.Values.name | default $.Chart.Name | quote }}
+          - name: OTEL_RESOURCE_ATTRIBUTES
+            value: "k8s.pod.name=$(POD_NAME),k8s.namespace.name=$(NAMESPACE),k8s.node.name=$(NODE_NAME),k8s.pod.ip=$(POD_IP),service.name={{ $.Values.name | default $.Chart.Name }}"
           {{- range $variable, $value := $.Values.global.services.environments }}
           - name: {{ $variable }}
             value: {{ $value | quote }}

@@ -195,6 +195,9 @@ data:
           key: service.instance.id
     connectors:
       spanmetrics:
+        dimensions:
+          - name: "namespace"
+            default: "{{ .Release.Namespace }}"
     service:
       telemetry:
         logs:

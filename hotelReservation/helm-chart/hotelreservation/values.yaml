@@ -3,7 +3,7 @@ global:
   fullnameOverride: ""
   mainChart: hotelres
   replicas: 1
-  imagePullPolicy: "IfNotPresent"
+  imagePullPolicy: "Always"
   imageRepo: "saurabhjha1/hotel-reservation"
   restartPolicy: Always
   serviceType: ClusterIP
@@ -26,12 +26,12 @@ global:
       JAEGER_SAMPLE_RATIO: "0.01"  # Can adjust sampling rate as needed
       MEMC_TIMEOUT: "2"
       GC: "100"
-      # OpenTelemetry configurations
-      OTEL_EXPORTER_OTLP_ENDPOINT: "otel-collector.otel-demo.svc.cluster.local:4317"  # OpenTelemetry Collector endpoint
-      OTEL_EXPORTER_OTLP_PROTOCOL: "grpc"  # Using gRPC for OTLP
-      OTEL_SERVICE_NAME: "hotel_reservation"  # Service name in traces
-      OTEL_TRACES_SAMPLER: "parentbased_traceidratio"  # Sampling strategy
-      OTEL_TRACES_SAMPLER_ARG: "0.01"  # Adjust sample rate as needed
+  #     # OpenTelemetry configurations
+  #     OTEL_EXPORTER_OTLP_ENDPOINT: "otel-collector.otel-demo.svc.cluster.local:4317"  # OpenTelemetry Collector endpoint
+  #     OTEL_EXPORTER_OTLP_PROTOCOL: "grpc"  # Using gRPC for OTLP
+  #     OTEL_SERVICE_NAME: "hotel_reservation"  # Service name in traces
+  #     OTEL_TRACES_SAMPLER: "parentbased_traceidratio"  # Sampling strategy
+  #     OTEL_TRACES_SAMPLER_ARG: "0.01"  # Adjust sample rate as needed
 
   affinity: {}
   tolerations: []

@@ -5,6 +5,7 @@ import (
 	"flag"
 	"io/ioutil"
 	"os"
+	"fmt"
 	"strconv"
 	"time"
 
@@ -19,8 +20,16 @@ import (
 func main() {
 	tune.Init()
 	log.Logger = zerolog.New(zerolog.ConsoleWriter{Out: os.Stdout, TimeFormat: time.RFC3339}).With().Timestamp().Caller().Logger()
-
+	podName := os.Getenv("POD_NAME")
+	namespace := os.Getenv("NAMESPACE")
+	nodeIP := os.Getenv("NODE_IP")
+	 // Print environment variables to console
+	 fmt.Println("1.->Environment Variables:")
+	 fmt.Println("1.->POD_NAME:", podName)
+	 fmt.Println("1.->NAMESPACE:", namespace)
+	 fmt.Println("1.->NODE_IP:", nodeIP)
 	log.Info().Msg("Reading config...")
+	log.Info().Msgf("1.-> trace context initialized: %v, %v, %v",podName, namespace, nodeIP)
 	jsonFile, err := os.Open("config.json")
 	if err != nil {
 		log.Error().Msgf("Got error while reading config: %v", err)
