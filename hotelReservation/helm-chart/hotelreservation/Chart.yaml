@@ -4,8 +4,9 @@ description: Helm chart for HotelReservation service in DeathStarBench
 type: application
 version: 0.1.0
 appVersion: "1.16.0"
-
 dependencies:
+  - name: wrk2
+    version: 0.1.0
   - name: consul
     version: 0.1.0
   - name: frontend
@@ -14,6 +15,7 @@ dependencies:
     version: 0.1.0
   - name: jaeger
     version: 0.1.0
+    condition: global.jaeger.enabled
   - name: memcached-profile
     version: 0.1.0
   - name: memcached-rate
@@ -43,4 +45,6 @@ dependencies:
   - name: search
     version: 0.1.0
   - name: user
+    version: 0.1.0
+  - name: otel-collector
     version: 0.1.0

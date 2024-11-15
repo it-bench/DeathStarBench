@@ -1,7 +1,7 @@
 {{- define "hotelreservation.templates.service-config.json" }}
 {
     "consulAddress": "consul-{{ include "hotel-reservation.fullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.serviceDnsDomain }}:8500",
-    "jaegerAddress": "jaeger-{{ include "hotel-reservation.fullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.serviceDnsDomain }}:6831",
+    "jaegerAddress": "{{ (printf "%s:6831" .Values.global.jaeger.address) | default (printf "jaeger-%s.%s.svc.%s:6831" (include "hotel-reservation.fullname" .) .Release.Namespace .Values.global.serviceDnsDomain) }}",
     "FrontendPort": "5000",
     "GeoPort": "8083",
     "GeoMongoAddress": "mongodb-geo-{{ include "hotel-reservation.fullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.serviceDnsDomain }}:27018",

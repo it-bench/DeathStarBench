@@ -9,6 +9,9 @@ global:
   dockerRegistry: docker.io
   defaultImageVersion: latest
   serviceDnsDomain: "cluster.local"
+  jaeger:
+    enabled: true
+    address: ""
   services:
     environments:
       # TLS enablement
@@ -47,3 +50,12 @@ global:
       pvprovisioner:
         enabled: false
         storageClassName: ceph-fs   # optional
+
+loadgen:
+  numThreads: "2"
+  numConns: "4"
+  duration: "30s"
+  requestsPerSec: 200
+  targetURL: ""
+  scriptPath: "/wrk2/scripts/hotel-reservation/mixed-workload_type_1.lua"
+  replicas: 1  # Number of replicas for the Deployment
