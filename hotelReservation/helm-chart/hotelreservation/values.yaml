@@ -4,6 +4,7 @@ global:
   mainChart: hotelres
   replicas: 1
   imagePullPolicy: "IfNotPresent"
+  imageRepo: "saurabhjha1/hotel-reservation"
   restartPolicy: Always
   serviceType: ClusterIP
   dockerRegistry: docker.io
