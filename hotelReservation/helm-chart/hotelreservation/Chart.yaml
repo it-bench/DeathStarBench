@@ -15,7 +15,7 @@ dependencies:
     version: 0.1.0
   - name: jaeger
     version: 0.1.0
-    condition: global.jaeger.enabled
+    condition: .Values.global.monitoring.defaultJaegerEnabled
   - name: memcached-profile
     version: 0.1.0
   - name: memcached-rate

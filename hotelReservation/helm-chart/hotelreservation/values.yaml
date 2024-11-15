@@ -9,9 +9,11 @@ global:
   dockerRegistry: docker.io
   defaultImageVersion: latest
   serviceDnsDomain: "cluster.local"
-  jaeger:
-    enabled: true
-    address: ""
+  monitoring:
+    defaultJaegerEnabled: true
+    otelAddress: ""
+    centralJaegerAddress: ""
+    centralPrometheusAddress: ""
   services:
     environments:
       # TLS enablement

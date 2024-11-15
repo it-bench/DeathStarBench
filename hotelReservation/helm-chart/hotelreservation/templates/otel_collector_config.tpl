@@ -130,11 +130,11 @@ data:
     exporters:
       logging:
       otlp:
-        endpoint: "jaeger-monitoring-1000-collector.monitoring-1000.svc.cluster.local:4317"
+        endpoint: "{{ .Values.global.monitoring.centralJaegerAddress }}:4317"
         tls:
           insecure: true
       otlphttp/prometheus:
-        endpoint: "http://prometheus-monitoring-1000-prometheus.monitoring-1000.svc.cluster.local:9090/api/v1/otlp"
+        endpoint: "{{ .Values.global.monitoring.centralPrometheusAddress }}"
         tls:
           insecure: true
     processors:
