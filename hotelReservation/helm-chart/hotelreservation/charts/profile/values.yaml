@@ -5,7 +5,7 @@ ports:
     targetPort: 8081
  
 container:
-  command: /go/bin/geo
+  command: /go/bin/profile
   image: saurabhjha1/hotel-reservation
   name: hotel-reserv-profile
   ports:
