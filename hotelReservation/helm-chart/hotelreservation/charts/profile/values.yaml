@@ -15,3 +15,14 @@ configMaps:
   - name: service-config.json
     mountPath: /workspace/config.json
     value: service-config
+
+tlsCertificates:
+  - name: ssl-certs
+    mountPath: /workspace/x509
+    certfiles:
+    - filename: "profile_server_cert.pem"
+      name: "server_cert.pem"
+    - filename: "profile_server_key.pem"
+      name: "server_key.pem"
+    - filename: "ca_cert.pem"
+      name: "ca_cert.pem"
