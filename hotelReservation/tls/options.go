@@ -89,7 +89,7 @@ func init() {
 			log.Panic().Msgf("credentials: failed to append certificates")
 		}
 		config := tls.Config{
-			ServerName: os.Hostname(),
+			ServerName: "x.test.example.com",
 			RootCAs:    cp,
 		}
 		httpsopt = &tls.Config{

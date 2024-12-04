@@ -93,7 +93,15 @@ spec:
         {{- end }}
         {{- if .command}}
         command:
-        - {{ .command }}
+          - "/bin/bash"
+          - "-c"
+          - |-
+              sed -i -e 's/x.test.example.com/frontend-{{ $fullname }}/g' /workspace/tls/options.go &&
+              export CGO_ENABLED=0 &&
+              export GOOS=linux &&
+              export GO111MODULE=on &&
+              go install -ldflags="-s -w" -mod=vendor ./cmd/... &&
+              {{ .command }}
         {{- end -}}
         {{- if .args}}
         args:
