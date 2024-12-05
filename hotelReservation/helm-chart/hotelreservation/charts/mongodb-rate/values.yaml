@@ -12,3 +12,9 @@ container:
   name: hotel-reserv-rate-mongo
   ports:
   - containerPort: 27017
+  args:
+    - "--auth" # MongoDB access control failure case
+
+useAccessControl: true
+useInitScript: true
+initScriptConfigMap: mongo-rate-script
