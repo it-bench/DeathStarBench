@@ -1,0 +1,1 @@
+{{ include "hotelreservation.templates.wrk2-deployment" . }}
