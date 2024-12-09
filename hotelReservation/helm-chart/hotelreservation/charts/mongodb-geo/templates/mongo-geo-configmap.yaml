@@ -1,3 +1,4 @@
+{{- if .Values.useInitScript }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -43,3 +44,4 @@ data:
          --eval "db.grantRolesToUser('$ROOT_USER', [{role: '$READ_WRITE_ROLE', db: '$TARGET_DB'}]);"
 
     echo "Initialization script for geo-db completed"
+{{- end }}
