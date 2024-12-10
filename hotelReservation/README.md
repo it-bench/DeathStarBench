@@ -40,6 +40,7 @@ The workload itself can be configured using optional enviroment variables. The a
 - TLS: Environment variable TLS controls the TLS enablement of gRPC and HTTP communications of the microservices in hotelReservation.
     - TLS=0 or not set(default): No TLS enabled for gRPC and HTTP communication.
     - TLS=1: All the gRPC and HTTP communications will be protected by TLS, e.g. `TLS=1 docker compose up -d`.
+      When using TLS=1, certificate files must be included in the `charts` folder for services; file names are indicated in the `tlsCertificates` section of the chart `values.yaml`.
     - TLS=<ciphersuite>: Use specified ciphersuite for TLS, e.g. `TLS=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 docker- ompose up -d`. The avaialbe cipher suite can be found at the file [options.go](tls/options.go#L21).
 
 - GC: Environment variable GC controls the garbage collection target percentage of Golang runtime. The default value is 100. See [golang doc](https://pkg.go.dev/runtime/debug#SetGCPercent) for details.

@@ -1,4 +1,20 @@
 {{- define "hotelreservation.templates.baseDeploymentServices" }}
+{{ $fullname := include "hotel-reservation.fullname" . }}
+{{- if and (hasKey $.Values "tlsCertificates") (eq $.Values.global.services.environments.TLS 1) }}
+{{- range $secret := $.Values.tlsCertificates }}
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: {{ $.Values.name }}-{{ $fullname }}-{{ $secret.name }}
+stringData:
+{{- range $certfile := $secret.certfiles }}
+  {{ $certfile.name }}: |-
+    {{- $.Files.Get $certfile.filename | nindent 4 -}}
+{{- end }}
+---
+{{- end }}
+{{- end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -77,7 +93,15 @@ spec:
         {{- end }}
         {{- if .command}}
         command:
-        - {{ .command }}
+          - "/bin/bash"
+          - "-c"
+          - |-
+              sed -i -e 's/x.test.example.com/frontend-{{ $fullname }}/g' /workspace/tls/options.go &&
+              export CGO_ENABLED=0 &&
+              export GOOS=linux &&
+              export GO111MODULE=on &&
+              go install -ldflags="-s -w" -mod=vendor ./cmd/... &&
+              {{ .command }}
         {{- end -}}
         {{- if .args}}
         args:
@@ -92,20 +116,38 @@ spec:
         resources:
           {{ tpl $.Values.global.resources $ | nindent 10 | trim }}
         {{- end }}
-        {{- if $.Values.configMaps }}        
+        {{- if or (hasKey $.Values "configMaps") (and (hasKey $.Values "tlsCertificates") (eq $.Values.global.services.environments.TLS 1)) }}
         volumeMounts: 
+        {{- if $.Values.configMaps }} 
         {{- range $configMap := $.Values.configMaps }}
         - name: {{ $.Values.name }}-{{ include "hotel-reservation.fullname" $ }}-config
           mountPath: {{ $configMap.mountPath }}
           subPath: {{ $configMap.name }}
         {{- end }}
         {{- end }}
+        {{- if and (hasKey $.Values "tlsCertificates") (eq $.Values.global.services.environments.TLS 1) }}
+        {{- range $secret := $.Values.tlsCertificates }}
+        - name: {{ $secret.name | quote }}
+          readOnly: true
+          mountPath: {{ $secret.mountPath | quote }}
+        {{- end }}
+        {{- end }}
+        {{- end }}
       {{- end -}}
-      {{- if $.Values.configMaps }}
+      {{- if or (hasKey $.Values "configMaps") (and (hasKey $.Values "tlsCertificates") (eq $.Values.global.services.environments.TLS 1)) }}
       volumes:
+      {{- if $.Values.configMaps }}
       - name: {{ $.Values.name }}-{{ include "hotel-reservation.fullname" $ }}-config
         configMap:
           name: {{ $.Values.name }}-{{ include "hotel-reservation.fullname" $ }}
+      {{- end }}
+      {{- if and (hasKey $.Values "tlsCertificates") (eq $.Values.global.services.environments.TLS 1) }}
+      {{- range $secret := $.Values.tlsCertificates }}
+      - name: {{ $secret.name | quote }}
+        secret:
+          secretName: {{ $.Values.name }}-{{ $fullname }}-{{ $secret.name }}
+      {{- end }}
+      {{- end }}
       {{- end }}
       {{- if hasKey .Values "topologySpreadConstraints" }}
       topologySpreadConstraints:

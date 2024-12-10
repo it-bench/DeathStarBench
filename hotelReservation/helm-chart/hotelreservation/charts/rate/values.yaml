@@ -17,3 +17,14 @@ configMaps:
     value: service-config
 
 useAccessControl: true
+
+tlsCertificates:
+  - name: ssl-certs
+    mountPath: /workspace/x509
+    certfiles:
+    - filename: "rate_server_cert.pem"
+      name: "server_cert.pem"
+    - filename: "rate_server_key.pem"
+      name: "server_key.pem"
+    - filename: "ca_cert.pem"
+      name: "ca_cert.pem"
