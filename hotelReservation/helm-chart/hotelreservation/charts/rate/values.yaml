@@ -15,3 +15,5 @@ configMaps:
   - name: service-config.json
     mountPath: /workspace/config.json
     value: service-config
+
+useAccessControl: true
