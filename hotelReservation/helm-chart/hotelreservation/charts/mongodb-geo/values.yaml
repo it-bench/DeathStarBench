@@ -13,5 +13,5 @@ container:
   ports:
   - containerPort: 27017
 
-useAccessControl: true
+useAccessControl: false
 initScriptConfigMap: mongo-geo-script
