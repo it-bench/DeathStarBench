@@ -79,19 +79,19 @@ spec:
       hostname: {{ .Values.name }}-{{ include "hotel-reservation.fullname" . }}
       restartPolicy: {{ .Values.restartPolicy | default .Values.global.restartPolicy}}
       {{- if .Values.affinity }}
-      affinity: {{ toYaml .Values.affinity | nindent 8 }}
+      affinity: {{- toYaml .Values.affinity | nindent 8 }}
       {{- else if hasKey $.Values.global "affinity" }}
-      affinity: {{ toYaml $.Values.global.affinity | nindent 8 }}
+      affinity: {{- toYaml $.Values.global.affinity | nindent 8 }}
       {{- end }}
       {{- if .Values.tolerations }}
-      tolerations: {{ toYaml .Values.tolerations | nindent 8 }}
+      tolerations: {{- toYaml .Values.tolerations | nindent 8 }}
       {{- else if hasKey $.Values.global "tolerations" }}
       tolerations: {{ toYaml $.Values.global.tolerations | nindent 8 }}
       {{- end }}
       {{- if .Values.nodeSelector }}
-      nodeSelector: {{ toYaml .Values.nodeSelector | nindent 8 }}
+      nodeSelector: {{- toYaml .Values.nodeSelector | nindent 8 }}
       {{- else if hasKey $.Values.global "nodeSelector" }}
-      nodeSelector: {{ toYaml $.Values.global.nodeSelector | nindent 8 }}
+      nodeSelector: {{- toYaml $.Values.global.nodeSelector | nindent 8 }}
       {{- end }}
       {{- if hasKey .Values "topologySpreadConstraints" }}
       topologySpreadConstraints:
