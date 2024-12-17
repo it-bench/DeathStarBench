@@ -76,6 +76,8 @@ spec:
         configMap:
           name: {{ .Values.initScriptConfigMap }}
       {{- end }}
+      hostname: {{ .Values.name }}-{{ include "hotel-reservation.fullname" . }}
+      restartPolicy: {{ .Values.restartPolicy | default .Values.global.restartPolicy}}
       {{- if .Values.affinity }}
       affinity: {{ toYaml .Values.affinity | nindent 8 }}
       {{- else if hasKey $.Values.global "affinity" }}
