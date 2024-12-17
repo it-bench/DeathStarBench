@@ -59,7 +59,7 @@ spec:
         volumeMounts:
         - mountPath: /data/db
           name: {{ .Values.name }}-{{ include "hotel-reservation.fullname" . }}-path
-        {{- if .Values.useInitScript }}
+        {{- if .Values.useAccessControl }}
         - name: init-script
           mountPath: /docker-entrypoint-initdb.d
         {{- end }}
@@ -71,7 +71,7 @@ spec:
         {{- else }}
         emptyDir: {}
         {{- end }}
-      {{- if .Values.useInitScript }}
+      {{- if .Values.useAccessControl }}
       - name: init-script
         configMap:
           name: {{ .Values.initScriptConfigMap }}
