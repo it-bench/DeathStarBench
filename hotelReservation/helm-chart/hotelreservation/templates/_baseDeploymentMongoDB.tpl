@@ -99,9 +99,9 @@ spec:
       {{- end }}
       {{- if hasKey .Values "topologySpreadConstraints" }}
       topologySpreadConstraints:
-        {{ tpl .Values.topologySpreadConstraints . | nindent 6 }}
+        {{ tpl .Values.topologySpreadConstraints . | nindent 6 | trim }}
       {{- else if hasKey $.Values.global.mongodb "topologySpreadConstraints" }}
       topologySpreadConstraints:
-        {{ tpl $.Values.global.mongodb.topologySpreadConstraints . | nindent 6 }}
+        {{ tpl $.Values.global.mongodb.topologySpreadConstraints . | nindent 6 | trim }}
       {{- end }}
 {{- end }}
