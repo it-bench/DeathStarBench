@@ -1,6 +1,6 @@
 {{- define "hotelreservation.templates.baseDeploymentServices" }}
 {{ $fullname := include "hotel-reservation.fullname" . }}
-{{- if and (hasKey $.Values "tlsCertificates") (eq $.Values.global.services.environments.TLS 1) }}
+{{- if and (hasKey $.Values "tlsCertificates") (eq (toString $.Values.global.services.environments.TLS) "1") }}
 {{- range $secret := $.Values.tlsCertificates }}
 apiVersion: v1
 kind: Secret
@@ -116,7 +116,7 @@ spec:
         resources:
           {{ tpl $.Values.global.resources $ | nindent 10 | trim }}
         {{- end }}
-        {{- if or (hasKey $.Values "configMaps") (and (hasKey $.Values "tlsCertificates") (eq $.Values.global.services.environments.TLS 1)) }}
+        {{- if or (hasKey $.Values "configMaps") (and (hasKey $.Values "tlsCertificates") (eq (toString $.Values.global.services.environments.TLS) "1")) }}
         volumeMounts: 
         {{- if $.Values.configMaps }} 
         {{- range $configMap := $.Values.configMaps }}
@@ -125,7 +125,7 @@ spec:
           subPath: {{ $configMap.name }}
         {{- end }}
         {{- end }}
-        {{- if and (hasKey $.Values "tlsCertificates") (eq $.Values.global.services.environments.TLS 1) }}
+        {{- if and (hasKey $.Values "tlsCertificates") (eq (toString $.Values.global.services.environments.TLS) "1") }}
         {{- range $secret := $.Values.tlsCertificates }}
         - name: {{ $secret.name | quote }}
           readOnly: true
@@ -134,14 +134,14 @@ spec:
         {{- end }}
         {{- end }}
       {{- end -}}
-      {{- if or (hasKey $.Values "configMaps") (and (hasKey $.Values "tlsCertificates") (eq $.Values.global.services.environments.TLS 1)) }}
+      {{- if or (hasKey $.Values "configMaps") (and (hasKey $.Values "tlsCertificates") (eq (toString $.Values.global.services.environments.TLS) "1")) }}
       volumes:
       {{- if $.Values.configMaps }}
       - name: {{ $.Values.name }}-{{ include "hotel-reservation.fullname" $ }}-config
         configMap:
           name: {{ $.Values.name }}-{{ include "hotel-reservation.fullname" $ }}
       {{- end }}
-      {{- if and (hasKey $.Values "tlsCertificates") (eq $.Values.global.services.environments.TLS 1) }}
+      {{- if and (hasKey $.Values "tlsCertificates") (eq (toString $.Values.global.services.environments.TLS) "1") }}
       {{- range $secret := $.Values.tlsCertificates }}
       - name: {{ $secret.name | quote }}
         secret:

@@ -1,6 +1,6 @@
 {{- define "hotelreservation.templates.wrk2-deployment" }}
 {{ $fullname := include "hotel-reservation.fullname" . }}
-{{- if eq $.Values.global.services.environments.TLS 1 }}
+{{- if eq (toString $.Values.global.services.environments.TLS) "1" }}
 apiVersion: v1
 kind: Secret
 type: Opaque
@@ -27,7 +27,7 @@ spec:
       containers:
         - name: wrk2
           image: "saurabhjha1/hotelreswrk2:latest"
-          {{- if eq $.Values.global.services.environments.TLS 1 }}
+          {{- if eq (toString $.Values.global.services.environments.TLS) "1" }}
           volumeMounts: 
           - name: "ca-certificate"
             readOnly: true
@@ -37,7 +37,7 @@ spec:
             - "/bin/sh"
             - "-c"
             - |
-              {{- if eq $.Values.global.services.environments.TLS 1 }}
+              {{- if eq (toString $.Values.global.services.environments.TLS) "1" }}
               cp -r certificates /usr/share/ca-certificates/custom-ca
               echo custom-ca/ca_cert.pem >> /etc/ca-certificates.conf
               update-ca-certificates
@@ -63,14 +63,14 @@ spec:
             - name: WRK2_REQUESTS_PER_SEC
               value: "{{ $.Values.loadgen.requestsPerSec }}"
             - name: WRK2_TARGET_URL
-              {{- if eq $.Values.global.services.environments.TLS 1 }}
+              {{- if eq (toString $.Values.global.services.environments.TLS) "1" }}
               value: "https://frontend-{{ include "hotel-reservation.fullname" . }}.{{ .Release.Namespace }}.svc.{{ $.Values.global.serviceDnsDomain }}:5000"
               {{- else }}
               value: "http://frontend-{{ include "hotel-reservation.fullname" . }}.{{ .Release.Namespace }}.svc.{{ $.Values.global.serviceDnsDomain }}:5000"
               {{- end }}
             - name: WRK2_SCRIPT_PATH
               value: "{{ $.Values.loadgen.scriptPath }}"
-      {{- if eq $.Values.global.services.environments.TLS 1 }}
+      {{- if eq (toString $.Values.global.services.environments.TLS) "1" }}
       volumes:
       - name: "ca-certificate"
         secret:
