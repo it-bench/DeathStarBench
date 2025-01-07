@@ -12,3 +12,6 @@ container:
   name: hotel-reserv-geo-mongo
   ports:
   - containerPort: 27017
+
+useAccessControl: false
+initScriptConfigMap: mongo-geo-script

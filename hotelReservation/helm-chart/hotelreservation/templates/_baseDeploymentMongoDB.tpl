@@ -31,65 +31,73 @@ spec:
       {{- end }}
     spec:
       containers:
-      {{- with .Values.container }}
-      - name: "{{ .name }}"
-        image: {{ .dockerRegistry | default $.Values.global.dockerRegistry }}/{{ .image }}:{{ .imageVersion | default $.Values.global.defaultImageVersion }}
-        imagePullPolicy: {{ .imagePullPolicy | default $.Values.global.imagePullPolicy }}
+      - name: "{{ .Values.container.name }}"
+        image: "{{ .Values.container.image }}:{{ .Values.container.imageVersion }}"
+        imagePullPolicy: {{ .Values.container.imagePullPolicy | default $.Values.global.imagePullPolicy }}
         ports:
-        {{- range $cport := .ports }}
-        - containerPort: {{ $cport.containerPort -}}
-        {{ end }}
-        {{- if .command}}
-        command:
-        - {{ .command }}
-        {{- end -}}
-        {{- if .args}}
-        args:
-        {{- range $arg := .args}}
-        - {{ $arg }}
-        {{- end -}}
+        {{- range $cport := .Values.container.ports }}
+        - containerPort: {{ $cport.containerPort }}
         {{- end }}
-        {{- if .resources }}
+        {{- if or .Values.useAccessControl .Values.container.args }}
+        args:
+        {{- if .Values.useAccessControl }}
+        - "--auth"
+        {{- end }}
+        {{- if .Values.container.args }}
+        {{- range $arg := .Values.container.args }}
+        - {{ $arg }}
+        {{- end }}
+        {{- end }}
+        {{- end }}
+        {{- if .Values.container.resources }}
         resources:
-          {{ tpl .resources $ | nindent 10 | trim }}
+          {{ tpl .Values.container.resources $ | nindent 10 }}
         {{- else if hasKey $.Values.global "resources" }}
         resources:
-          {{ tpl $.Values.global.resources $ | nindent 10 | trim }}
+          {{ tpl $.Values.global.resources $ | nindent 10 }}
         {{- end }}
         volumeMounts:
         - mountPath: /data/db
-          name: {{ $.Values.name }}-{{ include "hotel-reservation.fullname" $ }}-path
-      {{- end }}
+          name: {{ .Values.name }}-{{ include "hotel-reservation.fullname" . }}-path
+        {{- if .Values.useAccessControl }}
+        - name: init-script
+          mountPath: /docker-entrypoint-initdb.d
+        {{- end }}
       volumes:
       - name: {{ .Values.name }}-{{ include "hotel-reservation.fullname" . }}-path
-	{{- if $.Values.global.mongodb.persistentVolume.enabled }}
+        {{- if $.Values.global.mongodb.persistentVolume.enabled }}
         persistentVolumeClaim:
           claimName: {{ .Values.name }}-{{ include "hotel-reservation.fullname" . }}-pvc
         {{- else }}
         emptyDir: {}
         {{- end }}
-      {{- if hasKey .Values "topologySpreadConstraints" }}
-      topologySpreadConstraints:
-        {{ tpl .Values.topologySpreadConstraints . | nindent 6 | trim }}
-      {{- else if hasKey $.Values.global.mongodb "topologySpreadConstraints" }}
-      topologySpreadConstraints:
-        {{ tpl $.Values.global.mongodb.topologySpreadConstraints . | nindent 6 | trim }}
+      {{- if .Values.useAccessControl }}
+      - name: init-script
+        configMap:
+          name: {{ .Values.initScriptConfigMap }}
       {{- end }}
       hostname: {{ .Values.name }}-{{ include "hotel-reservation.fullname" . }}
       restartPolicy: {{ .Values.restartPolicy | default .Values.global.restartPolicy}}
       {{- if .Values.affinity }}
       affinity: {{- toYaml .Values.affinity | nindent 8 }}
       {{- else if hasKey $.Values.global "affinity" }}
-      affinity: {{- toYaml .Values.global.affinity | nindent 8 }}
+      affinity: {{- toYaml $.Values.global.affinity | nindent 8 }}
       {{- end }}
       {{- if .Values.tolerations }}
       tolerations: {{- toYaml .Values.tolerations | nindent 8 }}
       {{- else if hasKey $.Values.global "tolerations" }}
-      tolerations: {{- toYaml .Values.global.tolerations | nindent 8 }}
+      tolerations: {{ toYaml $.Values.global.tolerations | nindent 8 }}
       {{- end }}
       {{- if .Values.nodeSelector }}
       nodeSelector: {{- toYaml .Values.nodeSelector | nindent 8 }}
       {{- else if hasKey $.Values.global "nodeSelector" }}
-      nodeSelector: {{- toYaml .Values.global.nodeSelector | nindent 8 }}
+      nodeSelector: {{- toYaml $.Values.global.nodeSelector | nindent 8 }}
       {{- end }}
-{{- end}}
+      {{- if hasKey .Values "topologySpreadConstraints" }}
+      topologySpreadConstraints:
+        {{ tpl .Values.topologySpreadConstraints . | nindent 6 }}
+      {{- else if hasKey $.Values.global.mongodb "topologySpreadConstraints" }}
+      topologySpreadConstraints:
+        {{ tpl $.Values.global.mongodb.topologySpreadConstraints . | nindent 6 }}
+      {{- end }}
+{{- end }}
