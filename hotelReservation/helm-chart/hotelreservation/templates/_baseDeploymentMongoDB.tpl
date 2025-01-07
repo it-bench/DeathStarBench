@@ -38,6 +38,10 @@ spec:
         {{- range $cport := .Values.container.ports }}
         - containerPort: {{ $cport.containerPort }}
         {{- end }}
+        {{- if .command}}
+        command:
+        - {{ .command }}
+        {{- end -}}
         {{- if or .Values.useAccessControl .Values.container.args }}
         args:
         {{- if .Values.useAccessControl }}
