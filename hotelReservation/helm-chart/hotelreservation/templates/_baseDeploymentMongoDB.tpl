@@ -38,6 +38,10 @@ spec:
         {{- range $cport := .Values.container.ports }}
         - containerPort: {{ $cport.containerPort }}
         {{- end }}
+        {{- if .command}}
+        command:
+        - {{ .command }}
+        {{- end -}}
         {{- if or .Values.useAccessControl .Values.container.args }}
         args:
         {{- if .Values.useAccessControl }}
@@ -95,9 +99,9 @@ spec:
       {{- end }}
       {{- if hasKey .Values "topologySpreadConstraints" }}
       topologySpreadConstraints:
-        {{ tpl .Values.topologySpreadConstraints . | nindent 6 }}
+        {{ tpl .Values.topologySpreadConstraints . | nindent 6 | trim }}
       {{- else if hasKey $.Values.global.mongodb "topologySpreadConstraints" }}
       topologySpreadConstraints:
-        {{ tpl $.Values.global.mongodb.topologySpreadConstraints . | nindent 6 }}
+        {{ tpl $.Values.global.mongodb.topologySpreadConstraints . | nindent 6 | trim }}
       {{- end }}
 {{- end }}
