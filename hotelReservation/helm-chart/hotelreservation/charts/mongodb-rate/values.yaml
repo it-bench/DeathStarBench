@@ -13,5 +13,5 @@ container:
   ports:
   - containerPort: 27017
 
-useAccessControl: false
+useAccessControl: true
 initScriptConfigMap: mongo-rate-script
