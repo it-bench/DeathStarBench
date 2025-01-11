@@ -16,7 +16,7 @@ configMaps:
     mountPath: /workspace/config.json
     value: service-config
 
-useAccessControl: false
+useAccessControl: true
 
 tlsCertificates:
   - name: ssl-certs
