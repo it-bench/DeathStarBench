@@ -128,7 +128,7 @@ data:
               static_configs:
                 - targets: ['0.0.0.0:8888']
     exporters:
-      logging:
+      debug:
       otlp:
         endpoint: "{{ .Values.global.monitoring.centralJaegerAddress }}:4317"
         tls:
@@ -206,12 +206,12 @@ data:
         traces:
           receivers: [otlp, jaeger]
           processors: [k8sattributes, memory_limiter, resource, transform, batch]
-          exporters: [otlp, logging, spanmetrics]
+          exporters: [otlp, debug, spanmetrics]
         metrics:
           receivers: [hostmetrics, otlp, prometheus, spanmetrics]
           processors: [k8sattributes, memory_limiter, resource, batch]
-          exporters: [otlphttp/prometheus, logging]
+          exporters: [otlphttp/prometheus, debug]
         logs:
           receivers: [otlp]
           processors: [k8sattributes, memory_limiter, resource, batch]
-          exporters: [logging]
+          exporters: [debug]
