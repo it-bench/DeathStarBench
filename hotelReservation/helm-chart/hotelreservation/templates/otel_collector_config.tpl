@@ -41,7 +41,7 @@ roleRef:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: otel-collector-config-{{ include "hotel-reservation.fullname" . }}
+  name: otel-collector-config
 data:
   config.yaml: |
     receivers:

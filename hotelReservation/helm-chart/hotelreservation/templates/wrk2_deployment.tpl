@@ -13,16 +13,16 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: wrk2-{{ include "hotel-reservation.fullname" . }}
+  name: wrk2
 spec:
   replicas: {{ $.Values.wrk2.replicas }}
   selector:
     matchLabels:
-      app: wrk2-{{ include "hotel-reservation.fullname" . }}
+      app: wrk2
   template:
     metadata:
       labels:
-        app: wrk2-{{ include "hotel-reservation.fullname" . }}
+        app: wrk2
     spec:
       containers:
         - name: wrk2
@@ -64,9 +64,9 @@ spec:
               value: "{{ $.Values.loadgen.requestsPerSec }}"
             - name: WRK2_TARGET_URL
               {{- if eq (toString $.Values.global.services.environments.TLS) "1" }}
-              value: "https://frontend-{{ include "hotel-reservation.fullname" . }}.{{ .Release.Namespace }}.svc.{{ $.Values.global.serviceDnsDomain }}:5000"
+              value: "https://frontend.{{ .Release.Namespace }}.svc.{{ $.Values.global.serviceDnsDomain }}:5000"
               {{- else }}
-              value: "http://frontend-{{ include "hotel-reservation.fullname" . }}.{{ .Release.Namespace }}.svc.{{ $.Values.global.serviceDnsDomain }}:5000"
+              value: "http://frontend.{{ .Release.Namespace }}.svc.{{ $.Values.global.serviceDnsDomain }}:5000"
               {{- end }}
             - name: WRK2_SCRIPT_PATH
               value: "{{ $.Values.loadgen.scriptPath }}"

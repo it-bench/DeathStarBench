@@ -4,21 +4,21 @@ kind: Deployment
 metadata:
   labels:
     {{- include "hotel-reservation.labels" . | nindent 4 }}
-    service: {{ .Values.name | default .Chart.Name }}-{{ include "hotel-reservation.fullname" . }}
-  name: {{ .Values.name | default .Chart.Name }}-{{ include "hotel-reservation.fullname" . }}
+    service: {{ .Values.name | default .Chart.Name }}
+  name: {{ .Values.name | default .Chart.Name }}
 spec:
   replicas: {{ .Values.replicas | default .Values.global.replicas }}
   selector:
     matchLabels:
       {{- include "hotel-reservation.selectorLabels" . | nindent 6 }}
-      service: {{ .Values.name | default .Chart.Name }}-{{ include "hotel-reservation.fullname" . }}
-      app: {{ .Values.name | default .Chart.Name }}-{{ include "hotel-reservation.fullname" . }}
+      service: {{ .Values.name | default .Chart.Name }}
+      app: {{ .Values.name | default .Chart.Name }}
   template:
     metadata:
       labels:
         {{- include "hotel-reservation.labels" . | nindent 8 }}
-        service: {{ .Values.name | default .Chart.Name }}-{{ include "hotel-reservation.fullname" . }}
-        app: {{ .Values.name | default .Chart.Name }}-{{ include "hotel-reservation.fullname" . }}
+        service: {{ .Values.name | default .Chart.Name }}
+        app: {{ .Values.name | default .Chart.Name }}
     spec:
       containers:
         {{- with .Values.container }}
@@ -87,7 +87,7 @@ spec:
       topologySpreadConstraints:
         {{ tpl $.Values.global.topologySpreadConstraints . | nindent 6 | trim }}
         {{- end }}
-      hostname: {{ .Values.name | default .Chart.Name }}-{{ include "hotel-reservation.fullname" . }}
+      hostname: {{ .Values.name | default .Chart.Name }}
       restartPolicy: {{ .Values.restartPolicy | default .Values.global.restartPolicy}}
       {{- if .Values.affinity }}
       affinity: {{- toYaml .Values.affinity | nindent 8 }}

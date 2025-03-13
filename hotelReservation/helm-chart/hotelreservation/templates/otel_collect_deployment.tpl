@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: otel-collector-{{ include "hotel-reservation.fullname" . }}
+  name: otel-collector
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: otel-collector-{{ include "hotel-reservation.fullname" . }}
+      app: otel-collector
   template:
     metadata:
       labels:
-        app: otel-collector-{{ include "hotel-reservation.fullname" . }}
+        app: otel-collector
     spec:
       serviceAccountName: otel-collector 
       containers:
@@ -26,5 +26,5 @@ spec:
       volumes:
         - name: data
           configMap:
-            name: otel-collector-config-{{ include "hotel-reservation.fullname" . }}
+            name: otel-collector-config
       restartPolicy: Always

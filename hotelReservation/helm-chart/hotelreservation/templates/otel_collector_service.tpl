@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: otel-collector-{{ include "hotel-reservation.fullname" . }}
+  name: otel-collector
   labels:
-    app: otel-collector-{{ include "hotel-reservation.fullname" . }}
+    app: otel-collector
 spec:
   ports:
   - name: grpc
@@ -35,4 +35,4 @@ spec:
     targetPort: 14268
     protocol: TCP
   selector:
-    app: otel-collector-{{ include "hotel-reservation.fullname" . }}
+    app: otel-collector
