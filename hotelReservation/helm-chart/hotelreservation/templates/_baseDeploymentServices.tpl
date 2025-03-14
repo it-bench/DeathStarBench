@@ -6,7 +6,7 @@ apiVersion: v1
 kind: Secret
 type: Opaque
 metadata:
-  name: {{ $.Values.name }}-{{ $fullname }}-{{ $secret.name }}
+  name: {{ $.Values.name }}-{{ $secret.name }}
 stringData:
 {{- range $certfile := $secret.certfiles }}
   {{ $certfile.name }}: |-
@@ -96,7 +96,7 @@ spec:
           - "/bin/bash"
           - "-c"
           - |-
-              sed -i -e 's/x.test.example.com/frontend-{{ $fullname }}/g' /workspace/tls/options.go &&
+              sed -i -e 's/x.test.example.com/frontend/g' /workspace/tls/options.go &&
               export CGO_ENABLED=0 &&
               export GOOS=linux &&
               export GO111MODULE=on &&
@@ -120,7 +120,7 @@ spec:
         volumeMounts: 
         {{- if $.Values.configMaps }} 
         {{- range $configMap := $.Values.configMaps }}
-        - name: {{ $.Values.name }}-{{ include "hotel-reservation.fullname" $ }}-config
+        - name: {{ $.Values.name }}
           mountPath: {{ $configMap.mountPath }}
           subPath: {{ $configMap.name }}
         {{- end }}
@@ -137,15 +137,15 @@ spec:
       {{- if or (hasKey $.Values "configMaps") (and (hasKey $.Values "tlsCertificates") (eq (toString $.Values.global.services.environments.TLS) "1")) }}
       volumes:
       {{- if $.Values.configMaps }}
-      - name: {{ $.Values.name }}-{{ include "hotel-reservation.fullname" $ }}-config
+      - name: {{ $.Values.name }}
         configMap:
-          name: {{ $.Values.name }}-{{ include "hotel-reservation.fullname" $ }}
+          name: {{ $.Values.name }}
       {{- end }}
       {{- if and (hasKey $.Values "tlsCertificates") (eq (toString $.Values.global.services.environments.TLS) "1") }}
       {{- range $secret := $.Values.tlsCertificates }}
       - name: {{ $secret.name | quote }}
         secret:
-          secretName: {{ $.Values.name }}-{{ $fullname }}-{{ $secret.name }}
+          secretName: {{ $.Values.name }}-{{ $secret.name }}
       {{- end }}
       {{- end }}
       {{- end }}
