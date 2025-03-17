@@ -146,6 +146,17 @@ data:
             statements:
               - replace_pattern(name, "\\?.*", "")
               - replace_match(name, "GET /api/products/*", "GET /api/products/{productId}")
+          - context: resource
+            statements:
+              - set(resource.attributes["service.name"], "consul-{{ .Release.Name }}") where resource.attributes["service.name"] == "consul"
+              - set(resource.attributes["service.name"], "frontend-{{ .Release.Name }}") where resource.attributes["service.name"] == "frontend"
+              - set(resource.attributes["service.name"], "geo-{{ .Release.Name }}") where resource.attributes["service.name"] == "geo"
+              - set(resource.attributes["service.name"], "profile-{{ .Release.Name }}") where resource.attributes["service.name"] == "profile"
+              - set(resource.attributes["service.name"], "rate-{{ .Release.Name }}") where resource.attributes["service.name"] == "rate"
+              - set(resource.attributes["service.name"], "recommendation-{{ .Release.Name }}") where resource.attributes["service.name"] == "recommendation"
+              - set(resource.attributes["service.name"], "reservation-{{ .Release.Name }}") where resource.attributes["service.name"] == "reservation"
+              - set(resource.attributes["service.name"], "search-{{ .Release.Name }}") where resource.attributes["service.name"] == "search"
+              - set(resource.attributes["service.name"], "user-{{ .Release.Name }}") where resource.attributes["service.name"] == "user"
       k8sattributes:
         auth_type: "serviceAccount"
         passthrough: false
