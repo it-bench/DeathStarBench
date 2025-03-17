@@ -83,9 +83,9 @@ spec:
                 fieldPath: status.hostIP
           # OpenTelemetry specific environment variables
           - name: OTEL_SERVICE_NAME
-            value: {{ $.Values.name | default $.Chart.Name | quote }}
+            value: {{ $.Values.name | default $.Chart.Name }}-{{ $.Release.Name }}
           - name: OTEL_RESOURCE_ATTRIBUTES
-            value: "k8s.pod.name=$(POD_NAME),k8s.namespace.name=$(NAMESPACE),k8s.node.name=$(NODE_NAME),k8s.pod.ip=$(POD_IP),service.name={{ $.Values.name | default $.Chart.Name }}"
+            value: "k8s.pod.name=$(POD_NAME),k8s.namespace.name=$(NAMESPACE),k8s.node.name=$(NODE_NAME),k8s.pod.ip=$(POD_IP),service.name={{ $.Values.name | default $.Chart.Name }}-{{ $.Release.Name }}"
           {{- range $variable, $value := $.Values.global.services.environments }}
           - name: {{ $variable }}
             value: {{ $value | quote }}
